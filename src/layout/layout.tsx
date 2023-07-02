@@ -28,9 +28,8 @@ const App: React.FC = () => {
   const { currentMenus } = useLayout();
 
   const routerRender = (menuArr = currentMenus) => {
-    debugger;
     return menuArr.map((item) => (
-      <Route component={item.component} path={item.key + ""}>
+      <Route component={item.component} path={item.key + ""} key={item.key}>
         {item.children && routerRender(item.children)}
       </Route>
     ));
@@ -40,7 +39,6 @@ const App: React.FC = () => {
     history.push(key);
   };
   const logout = () => {
-    debugger;
     localStorage.removeItem("global");
     history.push("/login");
   };

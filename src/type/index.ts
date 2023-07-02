@@ -12,3 +12,17 @@ export enum Role {
 export interface IPayload<T extends Partial<AnyAction>> {
     payload: T
 }
+
+export interface IBasePagination<T> {
+    list: T[],
+    pagination: {
+        size: number,
+        page: number,
+        total: number
+    }
+}
+
+export class BaseParams {
+    public page = 1;
+    public size = 2;
+}

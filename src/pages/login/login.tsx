@@ -13,7 +13,6 @@ export default function Login() {
   );
   const login = async (values: ILoginParams) => {
     const data: any = await API.login(values);
-    console.log("data=", data);
     dispatch({
       type: "global/setUserInfo",
       payload: {

@@ -21,8 +21,6 @@ export default {
                 payload
             })
             yield put(routerRedux.push('/activityManage'))
-            // 接收到参数后，赋值给state
-            console.log(payload)
         }
     },
     /**

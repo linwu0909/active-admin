@@ -27,3 +27,9 @@
 .site-layout .site-layout-background {
     background: #fff;
 }
+.header-box {
+    float: right;
+}
+.header-btn {
+    margin-right: 29px;
+}

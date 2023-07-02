@@ -8,14 +8,12 @@ import {
 } from "@ant-design/icons";
 import { Layout, Menu, Button, theme } from "antd";
 import "./layout.css";
-import { menus } from "./layout.config";
 import { Route } from "dva/router";
-import BannerManage from "../pages/bannerManage/bannerManage";
-import ActivityManage from "../pages/activityManage/activityManage";
-import BackendUserManage from "../pages/backendUserManage/backendUserManage";
-import RegisterUserManage from "../pages/registerUserManage/registerUserManage";
+
 import { MenuInfo } from "rc-menu/lib/interface";
-import { useHistory } from "dva";
+import { useHistory, useSelector } from "dva";
+import { IGlobalState } from "../model/type";
+import useLayout from "./layout.hooks";
 
 const { Header, Sider, Content } = Layout;
 
@@ -24,16 +22,39 @@ const App: React.FC = () => {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
   const history = useHistory();
+
+  const { currentMenus } = useLayout();
+
+  const routerRender = (menuArr = currentMenus) => {
+    debugger;
+    return menuArr.map((item) => (
+      <Route component={item.component} path={item.key + ""}>
+        {item.children && routerRender(item.children)}
+      </Route>
+    ));
+  };
+
   const linkPage = ({ key }: MenuInfo) => {
     history.push(key);
+  };
+  const logout = () => {
+    debugger;
+    localStorage.removeItem("global");
+    history.push("/login");
   };
 
   return (
     <Layout id="layout">
       <Sider trigger={null} collapsible collapsed={collapsed}>
         <div className="logo">活动管理平台</div>
-        <Menu theme="dark" mode="inline" items={menus} onClick={linkPage} />
+        <Menu
+          theme="dark"
+          mode="inline"
+          items={currentMenus}
+          onClick={linkPage}
+        />
       </Sider>
       <Layout>
         <Header style={{ padding: 0, background: colorBgContainer }}>
@@ -47,6 +68,11 @@ const App: React.FC = () => {
               height: 64,
             }}
           />
+          <div className="header-box">
+            <Button type="link" className="header-btn" onClick={logout}>
+              退出登录
+            </Button>
+          </div>
         </Header>
         <Content
           style={{
@@ -56,18 +82,7 @@ const App: React.FC = () => {
             background: colorBgContainer,
           }}
         >
-          <Route path="/bannerManage">
-            <BannerManage></BannerManage>
-          </Route>
-          <Route path="/activityManage">
-            <ActivityManage></ActivityManage>
-          </Route>
-          <Route path="/userManage/backendUserManage">
-            <BackendUserManage></BackendUserManage>
-          </Route>
-          <Route path="/userManage/registerUserManage">
-            <RegisterUserManage></RegisterUserManage>
-          </Route>
+          {routerRender()}
         </Content>
       </Layout>
     </Layout>

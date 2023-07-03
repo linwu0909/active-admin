@@ -1,5 +1,5 @@
 import { BaseParams } from "../../type";
-
+import {Moment} from 'moment';
 export interface IActivity {
     // 活动人数上限
     activityMax: number;
@@ -16,6 +16,7 @@ export interface IActivity {
     wx: string;
     activityImg: string;
     status: number;
+    activityDate?: Moment[];
 }
 
 export interface IActivityParams extends BaseParams {

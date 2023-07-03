@@ -1,11 +1,29 @@
-import { Button, Input, Radio, Space, Image } from "antd";
+/* eslint-disable react-hooks/rules-of-hooks */
+import {
+  Button,
+  Input,
+  Radio,
+  Space,
+  Image,
+  Form,
+  Modal,
+  DatePicker,
+} from "antd";
 import Table, { ColumnsType } from "antd/es/table";
 import UseFetchList from "../../hooks/use-fetch-list";
 import { IActivity } from "./activityManage.type";
 import API from "./../../api";
 import UseDelData from "../../hooks/use-del-data";
+import UseInsert from "../../hooks/use-insert";
+import { formatDate } from "../../utils/formatData";
+import { useState } from "react";
+import moment from "moment";
+
+const { RangePicker } = DatePicker;
 
 export default function activityManage() {
+  const [form] = Form.useForm();
+
   const activityStatus = [
     {
       value: "",
@@ -74,8 +92,8 @@ export default function activityManage() {
     },
     {
       title: "活动时间",
-      dataIndex: "activityStartDate",
-      key: "activityStartDate",
+      dataIndex: "activityDate",
+      key: "activityDate",
       width: 100,
       render: (text, item) => {
         return `${item.activityStartDate}-${item.activityEndDate}`;
@@ -95,7 +113,9 @@ export default function activityManage() {
       render: (text, item) => {
         return (
           <Space>
-            <Button type="primary">编辑</Button>
+            <Button type="primary" onClick={() => setDataInfo(item.id)}>
+              编辑
+            </Button>
             <Button danger onClick={() => delData([item.id])}>
               删除
             </Button>
@@ -115,11 +135,43 @@ export default function activityManage() {
         return "已结束";
     }
   };
+  const { handleOk, setIsModal, isModal, setDataInfo } = UseInsert({
+    form,
+    convertData: (data) => {
+      if (data.activityDate) {
+        data.activityStartDate = formatDate(data.activityDate[0]);
+        data.activityEndDate = formatDate(data.activityDate[1]);
+      }
+      return data;
+    },
+    updateData: API.updateActivity,
+    createData: API.createActivity,
+    success: () => {
+      setFilterParams({ ...filterParams, page: 1 });
+    },
+    getDetail: API.getActivityDetail,
+    convertDetailData: (data) => {
+      // if (data.activityStartDate && data.activityEndDate) {
+      //   data.activityDate = [
+      //     moment(data.activityStartDate),
+      //     moment(data.activityEndDate),
+      //   ];
+      //   console.log(data.activityDate);
+      // }
+
+      return data;
+    },
+  });
+  const handleCancel = () => {
+    setIsModal(false);
+  };
   return (
     <div>
       <Space>
         <Button>刷新</Button>
-        <Button type="primary">新增</Button>
+        <Button type="primary" onClick={() => setIsModal(true)}>
+          新增
+        </Button>
         <Button danger onClick={() => delData()}>
           删除
         </Button>
@@ -179,6 +231,36 @@ export default function activityManage() {
           },
         }}
       ></Table>
+      <Modal
+        title="新增"
+        open={isModal}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        forceRender
+      >
+        <Form form={form} labelCol={{ span: 4 }} wrapperCol={{ span: 20 }}>
+          <Form.Item
+            label="活动名"
+            name="activityName"
+            rules={[{ required: true, message: "请输入活动名" }]}
+          >
+            <Input></Input>
+          </Form.Item>
+          <Form.Item label="活动上限" name="activityMax">
+            <Input></Input>
+          </Form.Item>
+          <Form.Item label="活动时间" name="activityDate">
+            <RangePicker />
+          </Form.Item>
+          <Form.Item label="主办方" name="business">
+            <Input></Input>
+          </Form.Item>
+          <Form.Item label="活动封面"></Form.Item>
+          <Form.Item label="活动详情" name="activityDesc">
+            <Input.TextArea />
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 }

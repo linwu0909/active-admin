@@ -4,8 +4,9 @@ import {
   IActivity,
   IActivityParams,
 } from "../pages/activityManage/activityManage.type";
+import { IBanner } from "../pages/bannerManage/bannerManage.type";
 import { ILoginParams, ILoginResponse } from "../pages/login/login.type";
-import { IBasePagination } from "../type";
+import { BaseParams, IBasePagination } from "../type";
 import request from "./../utils/request";
 
 const list1: IActivity[] = [
@@ -157,6 +158,30 @@ export default {
     return new Promise((resolve) => {
       const res = originList.filter((item) => item.id == id);
       resolve(res[0]);
+    });
+  },
+  getBanners(data: BaseParams): Promise<any> {
+    // return request.post<BaseParams, IBasePagination<IBanner>>('/admin/base/banner/page')
+    return new Promise((resolve) => {
+      resolve({
+        list: [
+          { img: "", id: 1 },
+          { img: "", id: 2 },
+        ],
+        pagination: { total: 2, size: 2, page: 1 },
+      });
+    });
+  },
+  delBanners(ids: Key[]): Promise<any> {
+    // return request.post<string[],{}>('/admin/base/banner/delete', {ids})
+    return new Promise((resolve) => {
+      resolve("操作成功");
+    });
+  },
+  createBanners(data: IBanner): Promise<any> {
+    // return request.post<IBanner, {}>('/admin/base/banner/add', data)
+    return new Promise((resolve) => {
+      resolve("操作成功");
     });
   },
 };

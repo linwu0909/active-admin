@@ -15,7 +15,7 @@ export interface IDelData {
 export interface IInsert<T> {
   form: FormInstance<T>;
   convertData?: (data: T) => T;
-  updateData: (data: T) => void;
+  updateData?: (data: T) => void;
   createData: (data: T) => void;
   success?: () => void;
   getDetail?: (id: string) => Promise<T>;

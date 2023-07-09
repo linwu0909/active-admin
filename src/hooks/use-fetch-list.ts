@@ -7,7 +7,10 @@ export default function UseFetchList<Response>(
 ) {
   const [dataSource, setDataSource] = useState<Response[]>([]);
   const [total, setTotal] = useState(0);
-  const [filterParams, setFilterParams] = useState(new BaseParams());
+  const [filterParams, setFilterParams] = useState({
+    ...new BaseParams(),
+    ...(props.defaultParams || {}),
+  });
   useEffect(() => {
     getData();
   }, [filterParams]);

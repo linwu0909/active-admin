@@ -23,7 +23,9 @@ export default function UseInsert<T>(props: IInsert<T>) {
   const setDataInfo = async (id: string) => {
     // !非空断言 代表一定有值
     let data = await props.getDetail!(id);
-    (data as any) = props.convertDetailData && props.convertDetailData(data);
+    if (props.convertDetailData) {
+      (data as any) = props.convertDetailData(data);
+    }
     props.form.setFieldsValue(data as any);
     setIsModal(true);
   };

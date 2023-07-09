@@ -20,7 +20,8 @@ const {
   getActivityDetail,
 } = Activity;
 const { getBanners, delBanners, createBanners } = Banner;
-const { getUsers, delUser, checkUser } = User;
+const { getUsers, delUser, checkUser, createUser, updateUser, getUserDetail } =
+  User;
 
 export default {
   login(data: ILoginParams) {
@@ -50,4 +51,7 @@ export default {
   getUsers,
   delUser,
   checkUser,
+  createUser,
+  updateUser,
+  getUserDetail,
 };
